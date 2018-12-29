@@ -1,0 +1,435 @@
+h1,
+h2,
+h3,
+h4 {
+    padding: 0;
+    margin: 0;
+}
+
+.error {
+    color: red;
+}
+
+.navbar {
+    background-color: #4c4c4c;
+    padding: 0;
+    min-height: 45px;
+}
+
+.navbar a {
+    color: #e8e8e8;
+    border-left: none;
+    border-right: 1px solid #424242;
+    display: inline-block;
+    padding: 8px 20px 10px !important;
+}
+
+.nav-item > a:first-child {
+    border-left: 1px solid #424242
+}
+
+.header {
+    width: 100%;
+    min-height: 80px;
+    border-bottom: 1px dashed #d2d6dd;
+}
+
+.header a {
+    color: #222;
+    text-decoration: none;
+}
+
+.header #pageTitle {
+    font-size: 32px;
+    font-weight: bold;
+    display: block;
+}
+
+.header #pageSubtitle {
+    margin: 0px 0 10px 0;
+    font-size: 18px;
+    font-weight: normal;
+    display: block;
+}
+
+.header .logo {
+    float: left;
+    height: 80px;
+    margin-right: 10px;
+}
+
+.container {
+    width: 100%;
+    max-width: 100%;
+}
+
+.container-wrap {
+    width: 990px;
+    margin: 0 auto;
+}
+
+.container > a:first-child {
+    display: block;
+    float: left;
+    white-space: nowrap;
+}
+
+.header > .container-wrap {
+    padding: 15px;
+}
+
+.border-box {
+    margin-top: 30px;
+    border: 1px solid #c7ccd7;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 70%;
+}
+/*
+    https://dribbble.com/shots/1650068-Pricing-Table
+*/
+.infobox-wrapper {
+    color: white;
+    margin: 0 20px;
+}
+
+.flex {
+    margin-bottom: 20px;
+}
+
+.flex > .infobox-wrapper {
+    max-width: 350px;
+    padding: 0;
+}
+
+.infobox-wrapper .infobox-header {
+    width: 100%;
+    padding: 30px 0;
+    background-color: rgba(76, 76, 76, 1);
+}
+
+.infobox-wrapper .infobox-header h1 {
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.infobox-wrapper .info {
+    background-color: rgba(76, 76, 76, .9);
+    padding: 20px 0;
+}
+
+.infobox-value {
+    height: 50px;
+}
+
+.form-wrapper {
+    color: white;
+    margin: 20px auto;
+    padding: 0;
+    max-width: 500px;
+}
+.form-header {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #10478f;
+}
+.form-header h1 {
+
+}
+.form-wrapper form {
+    padding: 20px 20%;
+    background-color: rgba(76, 76, 76, 1);
+    text-align: left;
+}
+.form-wrapper form label {
+    font-size: 1.2em;
+}
+.form-wrapper form label,
+.form-wrapper form select,
+.form-wrapper form input {
+    width: 100%;
+}
+.form-wrapper form input,
+.form-wrapper form select {
+    margin-bottom: 20px;
+}
+.form-wrapper form input,
+.form-wrapper form select {
+    background-color: #616161;
+    font-size: 1.2em;
+    color: white;
+    padding: 6px 10px;
+    border: none;
+    outline: none;
+}
+.form-wrapper form input:focus,
+.form-wrapper form input:select {
+    border: none;
+    border-bottom: 3px solid #b3b3b3;
+    padding-bottom: 3px;
+    outline: none;
+}
+.form-wrapper form .half,
+.form-wrapper form input.half {
+    width: 50%;
+}
+input[type="submit"] {
+    width: 50%;
+    cursor: pointer;
+    background-color: darkgreen;
+    text-shadow: #2b542c;
+    color: white;
+}
+
+
+.form-component label,
+.form-component input {
+    width: 100%;
+}
+
+.form-component input {
+    height: 50px;
+    padding: 10px;
+}
+
+.form-component {
+    margin: 20px;
+}
+
+.border-box > h3,
+.border-box > p {
+    padding-left: 20px;
+}
+
+.border-box p {
+    margin-bottom: 0;
+}
+
+.submit-btn {
+    margin: auto;
+    display: inherit;
+    height: 50px;
+    margin-top: 30px;
+}
+
+.border-box {
+    margin: 30px auto;
+}
+
+
+.clearfix {
+    clear: both;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.text-bold {
+    font-weight: 400;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-top: 50px;
+}
+
+.green {
+    color: #00FF00;
+}
+
+.red {
+    color: #FF0000;
+}
+
+.bool-symbol {
+    font-size: 2.5em;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+
+.token-string {
+    overflow-wrap: break-word;
+}
+
+.delete-button {
+    width: 100%;
+    height: 50px;
+}
+
+.border-box.wrap {
+    margin: 50px 20px;
+    min-height: 0px;
+    padding: 30px 20px 50px;
+}
+
+.border-box.wrap h4,
+.border-box.wrap p {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.border-box.wrap a {
+    color: #0056b3;
+}
+
+.container-wrap.flex-container {
+    display: flex;
+}
+
+.access-intro {
+    padding: 10px 20px 20px;
+    border-bottom: 1px solid lightgray;
+}
+.access-intro h3,
+.access-intro p {
+    padding: 5px;
+}
+
+.access-container {
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+    margin: 20px auto;
+    padding: 20px 0;
+    justify-content: space-between;
+}
+
+.access-information {
+     padding-left: 30px;
+ }
+.access-information h4{
+    text-align: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid lightgray;
+}
+
+.access-information p{
+}
+
+.access-information li {
+    list-style: none;
+}
+
+.revoke-button-a {
+    background-color: #1db35c;
+    color: #c7254e;
+}
+
+.revoke-button-a:hover {
+    text-decoration: none;
+    background-color: #1db35c;
+    color: #c7254e;
+}
+
+.revoke-button {
+    display: inherit;
+    margin: auto;
+    background-color: #1db35c;
+    color: #c7254e;
+    width: 30%;
+    padding: 10px;
+    color: white;
+}
+
+.revoke-button:hover {
+    background-color: #10478f;
+}
+
+.border-box > a {
+    display: inherit;
+    text-align: center;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.collapse {
+    height: auto;
+}
+
+.removeInformation {
+    margin-top: 5px;
+    font-size: 10px;
+    float: right;
+    clear: both;
+}
+
+.reject-button {
+    width: 30%;
+    margin: auto;
+    margin-top: 10px;
+    display: inherit;
+}
+
+.submit-btn {
+    margin-top: 70px;
+}
+
+.btn-default:hover {
+    background-color: #c7ccd7;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+.margin-left-20 {
+    margin-left: 20px;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.info-box {
+    border: 0.5px dotted #ccc;
+    margin: 15px 25px;
+    padding: 10px;
+    background-color: #FCFCFC;
+}
+
+.info-box p {
+    font-style: italic;
+}
+
+h5 {
+    margin: 5px;
+}
+
+h3, h4 {
+    text-align: center;
+}
+
+
+.edit-info i{
+    position: relative;
+    top: 5px;
+    margin-right: 5px;
+}
+
+.edit-info a{
+    position: absolute;
+    display: flex;
+    margin-left: 20px;
+}
+
+.form-small {
+    margin: 0 25px;
+}
+
+body {
+    background: #c7254e;
+}

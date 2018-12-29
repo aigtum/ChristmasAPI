@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>REST TEST</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+</head>
+
+<body>
+    <div class="access-intro">
+        <div class="border-box">
+            <div class="header">
+                <h2>🎄 Christmas Film REST API 🎄</h2>
+            </div>
+
+            <section class="">
+                <h1>Test the API:</h1>
+                <div class="access-container">
+                    <a th:href="@{/films}"><p><input class="revoke-button-a" type="submit"  value="GET all movies"></p></a>
+                </div>
+
+                <div class="access-container">
+                    <form th:action="@{/get_one}" th:object="${getOneForm}" method="get">
+
+                        <p>
+                            ID:
+                            <input type="text" th:field="*{id}">
+                        </p>
+                        <p><input class="revoke-button-a" type="submit" value="GET one movie"></p>
+
+                    </form>
+                </div>
+
+                <div class="access-container">
+                    <form th:action="@{/delete}" th:object="${deleteForm}" method="get">
+                        <p>ID:<input type="text" th:field="*{id}"></p>
+                        <p><input class="revoke-button-a" type="submit" value="DELETE movie"></p>
+                    </form>
+                </div>
+
+                <div class="access-container">
+                    <form th:action="@{/update}" th:object="${filmForm}" method="get">
+                        <table>
+                            <tr>
+                                <td>
+                                    ID (leave blank to add new):
+                                </td>
+                                <td>
+                                    <input type="text" th:field="*{id}">
+                                </td>
+
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    Title:
+                                </td>
+                                <td>
+                                    <input type="text" th:field="*{title}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Year:
+                                </td>
+                                <td>
+                                    <input type="text" th:field="*{year}">
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    About:
+                                </td>
+                                <td>
+                                    <input type="text" th:field="*{about}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Director:
+                                </td>
+                                <td>
+                                    <input type="text" th:field="*{director}">
+                                </td>
+                            </tr>
+                        </table>
+
+                        <p><input class="revoke-button-a" type="submit" value="UPDATE/ADD movie"></p>
+                    </form>
+                </div>
+            </section>
+
+
+            <!--
+            <section th:if="${result}" class="header">
+                <h2>Result: <p th:text="${result}"></p> </h2>
+            </section>
+
+            -->
+        </div>
+
+    </div>
+</body>
+</html>
