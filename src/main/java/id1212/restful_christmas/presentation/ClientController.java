@@ -1,4 +1,4 @@
-package id1212.restful_christmas.view;
+package id1212.restful_christmas.presentation;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpEntity;
@@ -7,9 +7,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Controller
@@ -52,11 +54,16 @@ public class ClientController {
 
 
     @GetMapping("/update")
-    public ResponseEntity<String> newFilm(FilmForm form) {
+    public ResponseEntity<String> newFilm(FilmForm form, BindingResult bindingResult) {
         String newFilm;
         boolean createNew;
 
+
         createNew = form.getId() == null;
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.unprocessableEntity().body("Form error! Please check and try again");
+        }
 
 
         if (!createNew) {
@@ -78,11 +85,15 @@ public class ClientController {
         if (createNew) {
             response = restTemplate.postForEntity("http://localhost:8080/films/", request , String.class );
         } else {
-            restTemplate.put("http://localhost:8080/films/" + form.getId(), request);
-            response = restTemplate.getForEntity("http://localhost:8080/films/" + form.getId(), String.class);
+            try {
+                restTemplate.put("http://localhost:8080/films/" + form.getId(), request);
+                response = restTemplate.getForEntity("http://localhost:8080/films/" + form.getId(), String.class);
+            } catch (HttpClientErrorException e) {
+                System.err.println("Could not find movie with that id");
+                response = ResponseEntity.ok("Could not find the ID, added with default instead");
+            }
         }
 
-        System.out.println(response);
         return response;
     }
 

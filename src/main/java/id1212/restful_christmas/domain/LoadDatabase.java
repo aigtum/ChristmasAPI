@@ -1,7 +1,7 @@
-package id1212.restful_christmas.model;
+package id1212.restful_christmas.domain;
 
 
-import id1212.restful_christmas.repo.FilmRepository;
+import id1212.restful_christmas.repository.FilmRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;

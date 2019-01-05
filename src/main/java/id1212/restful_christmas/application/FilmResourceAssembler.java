@@ -1,6 +1,6 @@
-package id1212.restful_christmas.controller;
+package id1212.restful_christmas.application;
 
-import id1212.restful_christmas.model.Film;
+import id1212.restful_christmas.domain.Film;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.stereotype.Component;

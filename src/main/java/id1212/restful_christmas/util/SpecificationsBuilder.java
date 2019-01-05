@@ -1,7 +1,7 @@
 package id1212.restful_christmas.util;
 
-import id1212.restful_christmas.controller.FilmSpecification;
-import id1212.restful_christmas.model.Film;
+import id1212.restful_christmas.application.FilmSpecification;
+import id1212.restful_christmas.domain.Film;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;

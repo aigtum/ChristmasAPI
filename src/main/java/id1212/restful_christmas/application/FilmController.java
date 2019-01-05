@@ -1,7 +1,7 @@
-package id1212.restful_christmas.controller;
+package id1212.restful_christmas.application;
 
-import id1212.restful_christmas.model.Film;
-import id1212.restful_christmas.repo.FilmRepository;
+import id1212.restful_christmas.domain.Film;
+import id1212.restful_christmas.repository.FilmRepository;
 import id1212.restful_christmas.util.FilmNotFoundException;
 import id1212.restful_christmas.util.SpecificationsBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +24,14 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 
 
-// the body returns at once, not waiting for view processing
+// the body returns at once, not waiting for presentation processing
 @RestController
 class FilmController {
     @Autowired
     private final FilmRepository repository;
     private final FilmResourceAssembler assembler;
 
-    // repository is injected into controller
+    // repository is injected into application
     FilmController(FilmRepository repository, FilmResourceAssembler assembler) {
         this.repository = repository;
         this.assembler = assembler;
@@ -141,15 +141,18 @@ class FilmController {
     /* DELETE */
     @DeleteMapping("/films/{id}")
     ResponseEntity<?> deleteFilm(@PathVariable Long id) {
+        Film film = null;
         try {
-            System.out.println("Film found, deleting");
-            Film film = repository.findById(id).orElseThrow(() -> new FilmNotFoundException(id));
-            repository.deleteById(id);
-            return ResponseEntity.ok("The film has been deleted");
+            film = repository.findById(id).orElseThrow(() -> new FilmNotFoundException(id));
         } catch (Exception e) {
-            System.out.println("Film not found");
-            return ResponseEntity.noContent().build();
+            System.err.println(e);
         }
+
+        if (film != null) {
+            repository.deleteById(id);
+            System.out.println("Film deleted");
+        }
+        return ResponseEntity.noContent().build();
     }
 
 }

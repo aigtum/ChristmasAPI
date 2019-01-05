@@ -1,4 +1,4 @@
-package id1212.restful_christmas.view;
+package id1212.restful_christmas.presentation;
 
 public class IdForm {
     private Long id;

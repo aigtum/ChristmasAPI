@@ -1,4 +1,4 @@
-package id1212.restful_christmas.model;
+package id1212.restful_christmas.domain;
 
 /*
 Model class/Domain object

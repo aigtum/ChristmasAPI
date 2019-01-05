@@ -1,6 +1,6 @@
-package id1212.restful_christmas.controller;
+package id1212.restful_christmas.application;
 
-import id1212.restful_christmas.model.Film;
+import id1212.restful_christmas.domain.Film;
 import id1212.restful_christmas.util.SearchCriteria;
 import org.springframework.data.jpa.domain.Specification;
 

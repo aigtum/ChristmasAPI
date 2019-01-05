@@ -1,8 +1,8 @@
 package id1212.restful_christmas;
 
-import id1212.restful_christmas.controller.FilmSpecification;
-import id1212.restful_christmas.model.Film;
-import id1212.restful_christmas.repo.FilmRepository;
+import id1212.restful_christmas.application.FilmSpecification;
+import id1212.restful_christmas.domain.Film;
+import id1212.restful_christmas.repository.FilmRepository;
 import id1212.restful_christmas.util.SearchCriteria;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,6 +70,10 @@ public class RestfulChristmasApplicationTests {
         repository.save(film3);
     }
 
+    @After
+    public void clear() {
+        repository.deleteAll();
+    }
 
     @Test
     public void shouldBeAbleToFindByTitle() {
@@ -85,7 +90,7 @@ public class RestfulChristmasApplicationTests {
 
         List<Film> results = repository.findAll(spec);
 
-        assertThat(film2, isIn(results));
+        assertThat(film3, isIn(results));
     }
 
     @Test
@@ -95,7 +100,7 @@ public class RestfulChristmasApplicationTests {
 
         List<Film> results = repository.findAll(Specification.where(spec1).and(spec2));
 
-        assertThat(film2, isIn(results));
+        assertThat(film3, isIn(results));
     }
 
 
@@ -114,32 +119,18 @@ public class RestfulChristmasApplicationTests {
 
     @Test
     public void shouldBeAbleToAddNewMovies() throws IOException {
-        System.out.println(">>>" + numOfFilms);
-
-        String expected = "{\"id\":3," +
-                "\"title\":\"Elf\"," +
-                "\"year\":2003," +
-                "\"about\":\"Funny movie\"," +
-                "\"director\":\"Jon Favreau\"," +
-                "\"likes\":0," +
-                "\"_links\":" +
-                "{\"self\":{\"href\":\"http://localhost:8080/films/3\"}," +
-                "\"films\":{\"href\":\"http://localhost:8080/films\"}," +
-                "\"like\":{\"href\":\"http://localhost:8080/films/3/like\"}}}";
         HttpPost post = new HttpPost("http://localhost:8080/films");
-        String json = "{\"id\":\"3\", \"title\": \"Elf\", \"year\": \"2003\", \"about\": \"Funny movie\", \"director\": \"Jon Favreau\"}";
+        String json = "{\"title\": \"Elf\", \"year\": \"2003\", \"about\": \"Funny movie\", \"director\": \"Jon Favreau\"}";
         StringEntity entity = new StringEntity(json);
 
         post.setEntity(entity);
         post.setHeader("Accept", "application/json");
         post.setHeader("Content-type", "application/json");
 
-        System.out.println(EntityUtils.toString(post.getEntity()));
 
         HttpResponse response = HttpClientBuilder.create().build().execute(post);
 
-        String result = EntityUtils.toString(response.getEntity());
-        assertThat(result, equalTo(expected));
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
     }
 
 
@@ -153,7 +144,14 @@ public class RestfulChristmasApplicationTests {
 
     @Test
     public void shouldGetCorrectResponseWhenSearchingForSingleFilm() throws IOException {
-        String film = "{\"id\":1,\"title\":\"The Nightmare Before Christmas\",\"year\":1993,\"about\":\"Despite having recently presided over a very successful Halloween, Jack Skellington, aka the Pumpkin King, is bored with his job and feels that life in Halloweenland lacks meaning. Then he stumbles upon Christmastown and promptly decides to make the Yuletide his own.\",\"director\":\"Chuck Jones\",\"likes\":0,\"_links\":{\"self\":{\"href\":\"http://localhost:8080/films/1\"},\"films\":{\"href\":\"http://localhost:8080/films\"},\"like\":{\"href\":\"http://localhost:8080/films/1/like\"}}}";
+        String film = "{\"id\":1,\"title\":\"The Nightmare Before Christmas\",\"year\":1993," +
+                "\"about\":\"Despite having recently presided over a very successful Halloween, Jack Skellington, " +
+                "aka the Pumpkin King, is bored with his job and feels that life in Halloweenland lacks meaning. " +
+                "Then he stumbles upon Christmastown and promptly decides to make the Yuletide his own.\"" +
+                ",\"director\":\"Chuck Jones\",\"likes\":0," +
+                "\"_links\":{\"self\":{\"href\":\"http://localhost:8080/films/1\"}," +
+                "\"films\":{\"href\":\"http://localhost:8080/films\"}," +
+                "\"like\":{\"href\":\"http://localhost:8080/films/1/like\"}}}";
 
         HttpUriRequest request = new HttpGet("http://localhost:8080/films/1");
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -165,17 +163,20 @@ public class RestfulChristmasApplicationTests {
 
     @Test
     public void shouldBeAbleToDelete() throws IOException {
-        HttpUriRequest delete = new HttpDelete("http://localhost:8080/films/3");
+        Long fID = film3.getId();
+        System.out.println(">>> film id" + fID);
+        System.out.println(">>" + repository.findAll());
+        HttpUriRequest delete = new HttpDelete("http://localhost:8080/films/"+fID);
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NO_CONTENT));
 
-        HttpUriRequest request = new HttpGet("http://localhost:8080/films/3");
+        HttpUriRequest request = new HttpGet("http://localhost:8080/films/"+fID);
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
 
 
-        assertThat(EntityUtils.toString(httpResponse.getEntity()), equalTo("Could not find film with id: 3"));
 
+        assertThat(EntityUtils.toString(httpResponse.getEntity()), equalTo("Could not find film with id: "+fID));
     }
 
 
