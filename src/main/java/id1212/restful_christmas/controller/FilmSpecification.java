@@ -13,6 +13,10 @@ public class FilmSpecification implements Specification<Film> {
 
     private SearchCriteria criteria;
 
+    public FilmSpecification(SearchCriteria criteria) {
+        this.criteria = criteria;
+    }
+
     @Override
     public Predicate toPredicate(Root<Film> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 

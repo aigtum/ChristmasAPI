@@ -1,7 +1,9 @@
 package id1212.restful_christmas;
 
+import id1212.restful_christmas.controller.FilmSpecification;
 import id1212.restful_christmas.model.Film;
 import id1212.restful_christmas.repo.FilmRepository;
+import id1212.restful_christmas.util.SearchCriteria;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpDelete;
@@ -17,8 +19,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,7 +32,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-
+@Transactional
 public class RestfulChristmasApplicationTests {
 
     @Autowired
@@ -36,6 +40,7 @@ public class RestfulChristmasApplicationTests {
 
     private Film film1;
     private Film film2;
+    private Film film3;
     private int numOfFilms;
 
     @Before
@@ -51,17 +56,54 @@ public class RestfulChristmasApplicationTests {
 
         film2 = new Film();
         film2.setTitle("Film2");
-        film2.setYear(1998);
-        film2.setAbout("about2");
+        film2.setYear(1995);
+        film2.setAbout("film 2, before 2000");
         film2.setDirector("director2");
         repository.save(film2);
+
+        film3 = new Film();
+        film3.setTitle("Film2");
+        film3.setYear(2001);
+        film3.setAbout("film 2, after 2000");
+        film3.setDirector("director2");
+        repository.save(film3);
     }
+
+
+    @Test
+    public void shouldBeAbleToFindByTitle() {
+        FilmSpecification spec = new FilmSpecification(new SearchCriteria("title", ":", "Film1"));
+
+        List<Film> results = repository.findAll(spec);
+
+        assertThat(film1, isIn(results));
+    }
+
+    @Test
+    public void shouldBeAbleToFindByYear() {
+        FilmSpecification spec = new FilmSpecification(new SearchCriteria("year", ">", "2000"));
+
+        List<Film> results = repository.findAll(spec);
+
+        assertThat(film2, isIn(results));
+    }
+
+    @Test
+    public void shouldBeAbleToCombineCriteria() {
+        FilmSpecification spec1 = new FilmSpecification(new SearchCriteria("year", ">", "2000"));
+        FilmSpecification spec2 = new FilmSpecification(new SearchCriteria("title", ":", "Film2"));
+
+        List<Film> results = repository.findAll(Specification.where(spec1).and(spec2));
+
+        assertThat(film2, isIn(results));
+    }
+
 
     @Test
     public void shouldHaveFilmsInDatabase () {
         List<Film> result = repository.findAll();
         assertThat(result, not(empty()));
-        assertThat(result.size(), equalTo(numOfFilms + 2));
+        assertThat(result.size(), equalTo(numOfFilms + 3));
     }
 
     @Test
@@ -72,9 +114,20 @@ public class RestfulChristmasApplicationTests {
 
     @Test
     public void shouldBeAbleToAddNewMovies() throws IOException {
-        String expected = "{\"id\":5,\"title\":\"Elf\",\"year\":2003,\"about\":[\"Will Ferrell\",\"Zooey Deschanel\"],\"director\":\"Jon Favreau\",\"likes\":0,\"_links\":{\"self\":{\"href\":\"http://localhost:8080/films/5\"},\"films\":{\"href\":\"http://localhost:8080/films\"},\"like\":{\"href\":\"http://localhost:8080/films/5/like\"}}}";
+        System.out.println(">>>" + numOfFilms);
+
+        String expected = "{\"id\":3," +
+                "\"title\":\"Elf\"," +
+                "\"year\":2003," +
+                "\"about\":\"Funny movie\"," +
+                "\"director\":\"Jon Favreau\"," +
+                "\"likes\":0," +
+                "\"_links\":" +
+                "{\"self\":{\"href\":\"http://localhost:8080/films/3\"}," +
+                "\"films\":{\"href\":\"http://localhost:8080/films\"}," +
+                "\"like\":{\"href\":\"http://localhost:8080/films/3/like\"}}}";
         HttpPost post = new HttpPost("http://localhost:8080/films");
-        String json = "{\"id\":\"5\", \"title\": \"Elf\", \"year\": \"2003\", \"starring\": [\"Will Ferrell\", \"Zooey Deschanel\"], \"director\": \"Jon Favreau\"}";
+        String json = "{\"id\":\"3\", \"title\": \"Elf\", \"year\": \"2003\", \"about\": \"Funny movie\", \"director\": \"Jon Favreau\"}";
         StringEntity entity = new StringEntity(json);
 
         post.setEntity(entity);
@@ -100,7 +153,7 @@ public class RestfulChristmasApplicationTests {
 
     @Test
     public void shouldGetCorrectResponseWhenSearchingForSingleFilm() throws IOException {
-        String film = "{\"id\":1,\"title\":\"The Nightmare Before Christmas\",\"year\":1993,\"starring\":[\"Boris Carloff\",\"June Foray\"],\"director\":\"Chuck Jones\",\"likes\":0,\"_links\":{\"self\":{\"href\":\"http://localhost:8080/films/1\"},\"films\":{\"href\":\"http://localhost:8080/films\"},\"like\":{\"href\":\"http://localhost:8080/films/1/like\"}}}";
+        String film = "{\"id\":1,\"title\":\"The Nightmare Before Christmas\",\"year\":1993,\"about\":\"Despite having recently presided over a very successful Halloween, Jack Skellington, aka the Pumpkin King, is bored with his job and feels that life in Halloweenland lacks meaning. Then he stumbles upon Christmastown and promptly decides to make the Yuletide his own.\",\"director\":\"Chuck Jones\",\"likes\":0,\"_links\":{\"self\":{\"href\":\"http://localhost:8080/films/1\"},\"films\":{\"href\":\"http://localhost:8080/films\"},\"like\":{\"href\":\"http://localhost:8080/films/1/like\"}}}";
 
         HttpUriRequest request = new HttpGet("http://localhost:8080/films/1");
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
@@ -115,14 +168,16 @@ public class RestfulChristmasApplicationTests {
         HttpUriRequest delete = new HttpDelete("http://localhost:8080/films/3");
         HttpResponse deleteResponse = HttpClientBuilder.create().build().execute(delete);
 
-        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_INTERNAL_SERVER_ERROR));
+        assertThat(deleteResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
         HttpUriRequest request = new HttpGet("http://localhost:8080/films/3");
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
 
+
         assertThat(EntityUtils.toString(httpResponse.getEntity()), equalTo("Could not find film with id: 3"));
 
     }
+
 
 
 

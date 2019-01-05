@@ -3,6 +3,9 @@ package id1212.restful_christmas.controller;
 import id1212.restful_christmas.model.Film;
 import id1212.restful_christmas.repo.FilmRepository;
 import id1212.restful_christmas.util.FilmNotFoundException;
+import id1212.restful_christmas.util.SpecificationsBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -22,6 +27,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 // the body returns at once, not waiting for view processing
 @RestController
 class FilmController {
+    @Autowired
     private final FilmRepository repository;
     private final FilmResourceAssembler assembler;
 
@@ -89,12 +95,34 @@ class FilmController {
                 .body(resource);
     }
 
-    /* GET */
-    @GetMapping("/films/search?{query}&{param}")
-    ResponseEntity<?> search(@RequestParam String query, @RequestParam String param) {
-        System.out.println("Q: " + query + " P: " + param);
-        return ResponseEntity.ok().build();
+
+    /* SEARCH */
+    @RequestMapping(method = RequestMethod.GET, value = "films/", produces = MediaType.APPLICATION_JSON_VALUE)
+    Resources<Resource<Film>> search(@RequestParam(value = "search") String search) {
+        System.out.println(">>>>" + search);
+        SpecificationsBuilder builder = new SpecificationsBuilder();
+        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+
+        Specification<Film> spec = builder.build();
+        //return repository.findAll(spec);
+
+
+        List<Resource<Film>> films = repository.findAll(spec).stream()
+                .map(assembler::toResource)
+                .collect(Collectors.toList());
+
+        return new Resources<>(films,
+                linkTo(methodOn(FilmController.class).all()).withSelfRel());
+
+
     }
+
+
+
 
     /* GET */
     @GetMapping("/films/{id}/like")
@@ -106,15 +134,22 @@ class FilmController {
         Resource<Film> resource = assembler.toResource(film);
 
         //return ResponseEntity.ok(assembler.toResource();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Film liked");
     }
 
 
     /* DELETE */
     @DeleteMapping("/films/{id}")
-    ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
-        repository.deleteById(id);
-        return ResponseEntity.noContent().build();
+    ResponseEntity<?> deleteFilm(@PathVariable Long id) {
+        try {
+            System.out.println("Film found, deleting");
+            Film film = repository.findById(id).orElseThrow(() -> new FilmNotFoundException(id));
+            repository.deleteById(id);
+            return ResponseEntity.ok("The film has been deleted");
+        } catch (Exception e) {
+            System.out.println("Film not found");
+            return ResponseEntity.noContent().build();
+        }
     }
 
 }

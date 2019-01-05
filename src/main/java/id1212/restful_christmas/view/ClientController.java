@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 @Controller
@@ -19,6 +21,7 @@ public class ClientController {
         model.addAttribute("getOneForm", new IdForm());
         model.addAttribute("deleteForm", new IdForm());
         model.addAttribute("filmForm", new FilmForm());
+        model.addAttribute("searchForm", new SearchForm());
         return "client";
     }
 
@@ -28,15 +31,22 @@ public class ClientController {
         return "redirect:" + "/films/" + id;
     }
 
-    @GetMapping("/delete")
-    public String delete(IdForm form) {
+    @GetMapping("/search")
+    public String search(SearchForm form) {
+        String query = form.getQuery();
+
+        return "redirect:" + "/films/?search=" + query;
+    }
+
+    @PostMapping("/delete")
+    @ResponseBody
+    public String delete(IdForm form, Model model) {
         Long id = form.getId();
 
         RestTemplate restTemplate = new RestTemplate();
-
         restTemplate.delete("http://localhost:8080/films/" + id);
 
-        return "redirect:" + "/films/" + id;
+        return "Film deleted!";
     }
 
 

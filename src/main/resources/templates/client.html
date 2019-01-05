@@ -33,9 +33,17 @@
                 </div>
 
                 <div class="access-container">
-                    <form th:action="@{/delete}" th:object="${deleteForm}" method="get">
+                    <form th:action="@{/delete}" th:object="${deleteForm}" method="post">
                         <p>ID:<input type="text" th:field="*{id}"></p>
                         <p><input class="revoke-button-a" type="submit" value="DELETE movie"></p>
+                    </form>
+                </div>
+
+                <div class="access-container">
+                    <form th:action="@{/search}" th:object="${searchForm}" method="get">
+                        <p>Input your query here if the form of: (title:Grinch) or (about:Christmas,year<2000)</p>
+                        <p>Query:<input type="text" th:field="*{query}"></p>
+                        <p><input class="revoke-button-a" type="submit" value="Search"></p>
                     </form>
                 </div>
 
