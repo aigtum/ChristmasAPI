@@ -1,7 +1,6 @@
-package id1212.restful_christmas.application;
+package id1212.restful_christmas.util;
 
 import id1212.restful_christmas.domain.Film;
-import id1212.restful_christmas.util.SearchCriteria;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;

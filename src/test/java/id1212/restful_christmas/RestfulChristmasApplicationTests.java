@@ -1,6 +1,6 @@
 package id1212.restful_christmas;
 
-import id1212.restful_christmas.application.FilmSpecification;
+import id1212.restful_christmas.util.FilmSpecification;
 import id1212.restful_christmas.domain.Film;
 import id1212.restful_christmas.repository.FilmRepository;
 import id1212.restful_christmas.util.SearchCriteria;

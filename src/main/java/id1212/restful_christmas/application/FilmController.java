@@ -108,15 +108,12 @@ class FilmController {
         }
 
         Specification<Film> spec = builder.build();
-        //return repository.findAll(spec);
-
 
         List<Resource<Film>> films = repository.findAll(spec).stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
 
-        return new Resources<>(films,
-                linkTo(methodOn(FilmController.class).all()).withSelfRel());
+        return new Resources<>(films, linkTo(methodOn(FilmController.class).all()).withSelfRel());
 
 
     }
