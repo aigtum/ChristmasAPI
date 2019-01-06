@@ -118,7 +118,7 @@ public class RestfulChristmasApplicationTests {
     }
 
     @Test
-    public void shouldBeAbleToAddNewMovies() throws IOException {
+    public void testPost() throws IOException {
         HttpPost post = new HttpPost("http://localhost:8080/films");
         String json = "{\"title\": \"Elf\", \"year\": \"2003\", \"about\": \"Funny movie\", \"director\": \"Jon Favreau\"}";
         StringEntity entity = new StringEntity(json);
@@ -135,7 +135,7 @@ public class RestfulChristmasApplicationTests {
 
 
     @Test
-    public void shouldResultIn200WhenCorrect() throws IOException {
+    public void testGetAll() throws IOException {
         HttpUriRequest request = new HttpGet("http://localhost:8080/films");
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
 
@@ -143,7 +143,7 @@ public class RestfulChristmasApplicationTests {
     }
 
     @Test
-    public void shouldGetCorrectResponseWhenSearchingForSingleFilm() throws IOException {
+    public void testGetOne() throws IOException {
         String film = "{\"id\":1,\"title\":\"The Nightmare Before Christmas\",\"year\":1993," +
                 "\"about\":\"Despite having recently presided over a very successful Halloween, Jack Skellington, " +
                 "aka the Pumpkin King, is bored with his job and feels that life in Halloweenland lacks meaning. " +
@@ -162,7 +162,7 @@ public class RestfulChristmasApplicationTests {
     }
 
     @Test
-    public void shouldBeAbleToDelete() throws IOException {
+    public void testDelete() throws IOException {
         Long fID = film3.getId();
         System.out.println(">>> film id" + fID);
         System.out.println(">>" + repository.findAll());
